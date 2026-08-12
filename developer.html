@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bookings — Developer View</title>
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/developer.css" />
+</head>
+<body>
+
+<div class="dev-header">
+  <h1>BOOKINGS</h1>
+</div>
+
+<div class="dev-legend">
+  <span><span class="swatch booked"></span>Booked</span>
+</div>
+
+<p class="dev-hint">Click a booked (orange) slot to view details or cancel it. Availability is managed directly in the Google Sheet.</p>
+
+<div class="dev-grid-wrap">
+  <div id="dev-grid" class="dev-grid"></div>
+</div>
+
+<!-- Booking detail modal -->
+<div id="detail-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <h2>Booking Details</h2>
+    <div id="detail-body"></div>
+    <button class="btn btn-danger" id="btn-cancel-booking">Cancel booking</button>
+    <button class="btn btn-secondary" id="btn-close-detail" style="margin-top: 0.75rem;">Close</button>
+    <p id="detail-error" class="error-text hidden"></p>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/slots.js"></script>
+<script src="js/api.js"></script>
+<script src="js/developer.js"></script>
+</body>
+</html>

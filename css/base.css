@@ -1,0 +1,197 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --black: #111;
+  --grey-light: #e5e5e5;
+  --grey-mid: #b3b3b3;
+  --grey-dark: #666;
+  --available-bg: #4caf6a;
+  --available-border: #388e4a;
+  --booked-bg: #f5a623;
+  --booked-border: #c97c00;
+  --unavailable-bg: #e5e5e5;
+  --unavailable-border: #b3b3b3;
+  --danger: #d64545;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--black);
+  background: #fff;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+}
+
+.underline {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 1.1rem 1.5rem;
+  border-radius: 999px;
+  transition: opacity 0.15s ease;
+  animation: fade-rise 0.45s ease both;
+}
+
+.btn:active {
+  opacity: 0.75;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: var(--black);
+  border: 2px solid var(--black);
+}
+
+.step-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--grey-mid);
+  color: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 50;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  position: relative;
+  background: #fff;
+  border: 2px solid var(--black);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  width: 100%;
+  max-width: 380px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--black);
+  font-size: 1.4rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.modal-close:active {
+  background: var(--grey-light);
+}
+
+.modal h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.modal .modal-subtitle {
+  text-align: center;
+  font-weight: 700;
+  color: var(--grey-dark);
+  margin-bottom: 1.5rem;
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+.field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.field input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--grey-mid);
+  font-size: 1rem;
+  background: #fafafa;
+}
+
+.field input:focus {
+  outline: 2px solid var(--black);
+  background: #fff;
+}
+
+.modal .btn {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.error-text {
+  color: var(--danger);
+  font-weight: 600;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}

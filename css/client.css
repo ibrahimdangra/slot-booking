@@ -1,0 +1,196 @@
+.screen {
+  position: relative;
+  height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.screen.hidden {
+  display: none;
+}
+
+.btn-back {
+  flex-shrink: 0;
+  align-self: flex-start;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--black);
+  color: var(--black);
+  font-size: 1.3rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-back:active {
+  opacity: 0.75;
+}
+
+.screen-top {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.screen-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 3rem;
+}
+
+.screen-body h1 {
+  font-size: 1.8rem;
+}
+
+.choice-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.choice-stack .btn {
+  width: 100%;
+  padding: 1.4rem;
+  font-size: 1.2rem;
+}
+
+/* Step 3: day/time grid */
+.grid-heading {
+  align-self: flex-start;
+  font-size: 1.5rem;
+  margin: 1rem 0 0.25rem;
+}
+
+.grid-subtitle {
+  align-self: flex-start;
+  color: var(--grey-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.slot-grid-wrap {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.grid-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--grey-dark);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: 56px repeat(6, minmax(48px, 1fr));
+  border-top: 1px solid var(--grey-light);
+  border-left: 1px solid var(--grey-light);
+  min-width: 480px;
+}
+
+.slot-grid.fade-in {
+  animation: fade-in 0.4s ease both;
+}
+
+.slot-grid .cell {
+  border-right: 1px solid var(--grey-light);
+  border-bottom: 1px solid var(--grey-light);
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+.slot-grid .cell.row-hour-line {
+  border-bottom: 1px solid var(--grey-mid);
+}
+
+.slot-grid .cell.row-half-line {
+  border-bottom: 1px dotted var(--grey-mid);
+}
+
+.slot-grid .cell.day-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+}
+
+.slot-grid .cell.day-header,
+.slot-grid .cell.time-label {
+  font-weight: 800;
+}
+
+.slot-grid .cell.time-label {
+  position: relative;
+  border-bottom: none;
+  font-size: 0.7rem;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-right: 6px;
+  font-weight: 700;
+}
+
+.slot-grid .cell.time-label span {
+  position: relative;
+  top: -0.6em;
+  background: #fff;
+}
+
+.slot-grid .cell.bookable {
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.slot-grid .cell.bookable:active {
+  background: var(--grey-light);
+}
+
+.slot-grid .cell.empty {
+  background: var(--grey-light);
+  cursor: default;
+}
+
+.booking-summary {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.confirmation-icon {
+  font-size: 3rem;
+}

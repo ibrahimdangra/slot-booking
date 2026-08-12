@@ -1,0 +1,152 @@
+body {
+  padding: 2rem;
+  user-select: none;
+}
+
+.dev-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dev-header h1 {
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+.dev-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.dev-legend .swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border: 1px solid var(--grey-mid);
+}
+
+.swatch.available {
+  background: var(--available-bg);
+}
+
+.swatch.unavailable {
+  background: var(--unavailable-bg);
+}
+
+.swatch.booked {
+  background: var(--booked-bg);
+}
+
+.dev-hint {
+  color: var(--grey-dark);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.dev-grid-wrap {
+  overflow-x: auto;
+}
+
+.dev-grid {
+  display: grid;
+  /* 1 label col + 6 day cols, rows are half-hour units */
+  grid-template-columns: 70px repeat(6, minmax(110px, 1fr));
+  border-top: 1px solid var(--grey-light);
+  border-left: 1px solid var(--grey-light);
+  min-width: 760px;
+}
+
+.dev-grid .cell {
+  border-right: 1px solid var(--grey-light);
+  border-bottom: 1px solid var(--grey-light);
+  min-height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.dev-grid .cell.day-header {
+  font-weight: 800;
+  min-height: 36px;
+  background: #fff;
+}
+
+.dev-grid .cell.time-label {
+  position: relative;
+  border-bottom: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-right: 8px;
+}
+
+.dev-grid .cell.time-label span {
+  position: relative;
+  top: -0.6em;
+  background: #fff;
+}
+
+.dev-grid .cell.slot.hour-start {
+  border-top: 1px solid var(--grey-mid);
+}
+
+.dev-grid .cell.slot.empty {
+  background: transparent;
+}
+
+.dev-grid .cell.slot.booked-start {
+  background: var(--booked-bg);
+  border: 1px solid var(--booked-border);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.75rem;
+  align-items: flex-start;
+  padding-top: 4px;
+  text-align: center;
+  z-index: 1;
+}
+
+.dev-grid .cell.slot.booked-continue {
+  background: var(--booked-bg);
+  border-left: 1px solid var(--booked-border);
+  border-right: 1px solid var(--booked-border);
+  cursor: pointer;
+}
+
+.dev-grid .cell.slot.booked-end {
+  border-bottom: 1px solid var(--booked-border);
+}
+
+/* Booking detail modal extras */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--grey-light);
+  font-size: 0.95rem;
+}
+
+.detail-row span:first-child {
+  color: var(--grey-dark);
+  font-weight: 600;
+}
+
+.detail-row span:last-child {
+  font-weight: 700;
+  text-align: right;
+}
+
+.btn-danger {
+  background: var(--danger);
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Book A Tutoring Slot</title>
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/client.css" />
+</head>
+<body>
+
+<!-- Step 1: Landing -->
+<section id="step-1" class="screen">
+  <div class="screen-body">
+    <h1>Start Here</h1>
+    <button class="btn" id="btn-start">Book A Slot</button>
+  </div>
+</section>
+
+<!-- Step 2: Level -->
+<section id="step-2" class="screen hidden">
+  <button class="btn-back" id="btn-back-2" aria-label="Back">&#8592;</button>
+  <div class="screen-body">
+    <h1>Choose a level</h1>
+    <div class="choice-stack">
+      <button class="btn" data-level="GCSE">GCSE</button>
+      <button class="btn" data-level="A-Level">A-LEVEL</button>
+    </div>
+  </div>
+</section>
+
+<!-- Step 3: Day & time grid -->
+<section id="step-3" class="screen hidden">
+  <button class="btn-back" id="btn-back-3" aria-label="Back">&#8592;</button>
+  <h1 class="grid-heading">Choose a day &amp; time</h1>
+  <p id="grid-subtitle" class="grid-subtitle"></p>
+  <div class="slot-grid-wrap">
+    <p id="grid-loading" class="grid-loading hidden">Loading</p>
+    <div id="slot-grid" class="slot-grid"></div>
+  </div>
+</section>
+
+<!-- Step 4 modal: booking form (overlays step 3) -->
+<div id="booking-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="modal-close" id="btn-close-booking" aria-label="Close">&#215;</button>
+    <h2 id="modal-title">Day Time</h2>
+    <p class="modal-subtitle" id="modal-level">LEVEL</p>
+    <form id="booking-form">
+      <div class="field">
+        <label for="studentName">Student full name</label>
+        <input type="text" id="studentName" required />
+      </div>
+      <div class="field">
+        <label for="parentName">Parent full name</label>
+        <input type="text" id="parentName" required />
+      </div>
+      <div class="field">
+        <label for="parentNumber">Parent number</label>
+        <input type="tel" id="parentNumber" required />
+      </div>
+      <div class="field">
+        <label for="email">Email for Zoom</label>
+        <input type="email" id="email" required />
+      </div>
+      <button type="submit" class="btn">Book</button>
+      <p id="booking-error" class="error-text hidden"></p>
+    </form>
+  </div>
+</div>
+
+<!-- Step 5: Confirmation -->
+<section id="step-5" class="screen hidden">
+  <div class="screen-body">
+    <h1>Thanks for booking!</h1>
+    <button class="btn" id="btn-book-another">Book another</button>
+  </div>
+</section>
+
+<script src="js/config.js"></script>
+<script src="js/slots.js"></script>
+<script src="js/api.js"></script>
+<script src="js/client.js"></script>
+</body>
+</html>
