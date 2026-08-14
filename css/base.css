@@ -13,6 +13,10 @@
   --available-border: #388e4a;
   --booked-bg: #f5a623;
   --booked-border: #c97c00;
+  --booked-gcse-bg: #f5a623;
+  --booked-gcse-border: #c97c00;
+  --booked-alevel-bg: #9b59d0;
+  --booked-alevel-border: #703c9c;
   --unavailable-bg: #e5e5e5;
   --unavailable-border: #b3b3b3;
   --danger: #d64545;
@@ -166,7 +170,8 @@ button {
   margin-bottom: 0.4rem;
 }
 
-.field input {
+.field input,
+.field select {
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 12px;
@@ -175,7 +180,8 @@ button {
   background: #fafafa;
 }
 
-.field input:focus {
+.field input:focus,
+.field select:focus {
   outline: 2px solid var(--black);
   background: #fff;
 }

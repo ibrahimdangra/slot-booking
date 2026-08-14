@@ -41,8 +41,12 @@ body {
   background: var(--unavailable-bg);
 }
 
-.swatch.booked {
-  background: var(--booked-bg);
+.swatch.booked-gcse {
+  background: var(--booked-gcse-bg);
+}
+
+.swatch.booked-alevel {
+  background: var(--booked-alevel-bg);
 }
 
 .dev-hint {
@@ -52,13 +56,16 @@ body {
 }
 
 .dev-grid-wrap {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: calc(100vh - 200px);
+  -webkit-overflow-scrolling: touch;
 }
 
 .dev-grid {
   display: grid;
   /* 1 label col + 6 day cols, rows are half-hour units */
   grid-template-columns: 70px repeat(6, minmax(110px, 1fr));
+  grid-template-rows: 36px repeat(24, 50px);
   border-top: 1px solid var(--grey-light);
   border-left: 1px solid var(--grey-light);
   min-width: 760px;
@@ -67,7 +74,8 @@ body {
 .dev-grid .cell {
   border-right: 1px solid var(--grey-light);
   border-bottom: 1px solid var(--grey-light);
-  min-height: 22px;
+  height: 50px;
+  overflow: visible;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,8 +84,11 @@ body {
 }
 
 .dev-grid .cell.day-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   font-weight: 800;
-  min-height: 36px;
+  height: 36px;
   background: #fff;
 }
 
@@ -106,26 +117,76 @@ body {
 }
 
 .dev-grid .cell.slot.booked-start {
-  background: var(--booked-bg);
-  border: 1px solid var(--booked-border);
   cursor: pointer;
   font-weight: 700;
-  font-size: 0.75rem;
-  align-items: flex-start;
-  padding-top: 4px;
+  font-size: 0.8rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.25;
   text-align: center;
+  overflow: hidden;
   z-index: 1;
 }
 
+.dev-grid .cell.slot.booked-start .booking-name {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.dev-grid .cell.slot.booked-start .booking-subject {
+  font-weight: 500;
+  font-size: 0.72rem;
+  color: var(--black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 .dev-grid .cell.slot.booked-continue {
-  background: var(--booked-bg);
-  border-left: 1px solid var(--booked-border);
-  border-right: 1px solid var(--booked-border);
   cursor: pointer;
 }
 
-.dev-grid .cell.slot.booked-end {
-  border-bottom: 1px solid var(--booked-border);
+.dev-grid .cell.slot.booked-start.level-gcse,
+.dev-grid .cell.slot.booked-continue.level-gcse {
+  background: var(--booked-gcse-bg);
+}
+
+.dev-grid .cell.slot.booked-start.level-gcse {
+  border: 1px solid var(--black);
+  border-bottom: none;
+}
+
+.dev-grid .cell.slot.booked-continue.level-gcse {
+  border-left: 1px solid var(--black);
+  border-right: 1px solid var(--black);
+}
+
+.dev-grid .cell.slot.booked-end.level-gcse {
+  border-bottom: 1px solid var(--black);
+}
+
+.dev-grid .cell.slot.booked-start.level-alevel,
+.dev-grid .cell.slot.booked-continue.level-alevel {
+  background: var(--booked-alevel-bg);
+}
+
+.dev-grid .cell.slot.booked-start.level-alevel {
+  border: 1px solid var(--black);
+  border-bottom: none;
+}
+
+.dev-grid .cell.slot.booked-continue.level-alevel {
+  border-left: 1px solid var(--black);
+  border-right: 1px solid var(--black);
+}
+
+.dev-grid .cell.slot.booked-end.level-alevel {
+  border-bottom: 1px solid var(--black);
 }
 
 /* Booking detail modal extras */

@@ -49,9 +49,7 @@ function getBookableSlots(availability, bookings, day, level) {
   const unitsNeeded = LEVEL_UNITS[level];
   if (!unitsNeeded) return [];
 
-  const openUnits = getOpenUnits(availability, day);
-  const occupiedUnits = getOccupiedUnits(bookings, day);
-  const freeUnits = new Set([...openUnits].filter((u) => !occupiedUnits.has(u)));
+  const freeUnits = getFreeUnits(availability, bookings, day);
 
   const results = [];
   for (const startTime of TIMES) {
@@ -68,4 +66,30 @@ function getBookableSlots(availability, bookings, day, level) {
     }
   }
   return results;
+}
+
+// Set of half-hour units that are individually open and not yet booked,
+// regardless of whether a full level-length slot fits starting there.
+function getFreeUnits(availability, bookings, day) {
+  const openUnits = getOpenUnits(availability, day);
+  const occupiedUnits = getOccupiedUnits(bookings, day);
+  return new Set([...openUnits].filter((u) => !occupiedUnits.has(u)));
+}
+
+// Checks whether a full level-length slot starting at startTime is free.
+// Returns { valid, endTime }.
+function getLevelSlotAt(availability, bookings, day, level, startTime) {
+  const unitsNeeded = LEVEL_UNITS[level];
+  if (!unitsNeeded) return { valid: false };
+
+  const freeUnits = getFreeUnits(availability, bookings, day);
+  const startMin = timeToMinutes(startTime);
+  const neededUnits = [];
+  for (let i = 0; i < unitsNeeded; i++) {
+    neededUnits.push(minutesToTime(startMin + i * UNIT_MINUTES));
+  }
+  return {
+    valid: neededUnits.every((u) => freeUnits.has(u)),
+    endTime: minutesToTime(startMin + unitsNeeded * UNIT_MINUTES),
+  };
 }

@@ -71,7 +71,7 @@ function readBookings() {
   const rows = sheet.getDataRange().getValues();
   const out = [];
   for (let i = 1; i < rows.length; i++) {
-    const [bookingId, day, startTime, endTime, level, studentName, parentName, parentNumber, email, createdAt] = rows[i];
+    const [bookingId, day, startTime, endTime, level, subject, studentName, parentName, parentNumber, email, createdAt] = rows[i];
     if (!bookingId) continue;
     out.push({
       bookingId: String(bookingId),
@@ -79,6 +79,7 @@ function readBookings() {
       startTime: formatTimeCell(startTime),
       endTime: formatTimeCell(endTime),
       level: String(level),
+      subject: String(subject),
       studentName: String(studentName),
       parentName: String(parentName),
       parentNumber: String(parentNumber),
@@ -104,8 +105,8 @@ function formatTimeCell(val) {
 // ---- Write actions ----
 
 function bookSlot(body) {
-  const { day, startTime, endTime, level, studentName, parentName, parentNumber, email } = body;
-  if (!day || !startTime || !endTime || !level || !studentName || !parentName || !parentNumber || !email) {
+  const { day, startTime, endTime, level, subject, studentName, parentName, parentNumber, email } = body;
+  if (!day || !startTime || !endTime || !level || !subject || !studentName || !parentName || !parentNumber || !email) {
     return { ok: false, error: "missing_fields" };
   }
 
@@ -135,7 +136,7 @@ function bookSlot(body) {
   const bookingId = "b_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
   const sheet = getSheet(SHEET_BOOKINGS);
   sheet.appendRow([
-    bookingId, day, startTime, endTime, level,
+    bookingId, day, startTime, endTime, level, subject,
     studentName, parentName, parentNumber, email,
     new Date().toISOString(),
   ]);

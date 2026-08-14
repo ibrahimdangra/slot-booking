@@ -43,10 +43,11 @@ function render() {
 
       if (bookingInfo) {
         const { booking, index, total } = bookingInfo;
+        const levelCls = booking.level === "A-Level" ? "level-alevel" : "level-gcse";
         if (index === 0) {
-          cell = makeCell(booking.studentName, `slot booked-start${isHourStart ? " hour-start" : ""}`);
+          cell = makeBookingCell(booking, `slot booked-start ${levelCls}${isHourStart ? " hour-start" : ""}`);
         } else {
-          cell = makeCell("", `slot booked-continue${isHourStart ? " hour-start" : ""}`);
+          cell = makeCell("", `slot booked-continue ${levelCls}${isHourStart ? " hour-start" : ""}`);
         }
         if (index === total - 1) cell.classList.add("booked-end");
         cell.addEventListener("click", () => openDetailModal(booking));
@@ -57,6 +58,21 @@ function render() {
       grid.appendChild(cell);
     });
   });
+}
+
+function makeBookingCell(booking, cls) {
+  const div = document.createElement("div");
+  div.className = `cell ${cls}`;
+  const nameSpan = document.createElement("span");
+  nameSpan.className = "booking-name";
+  nameSpan.textContent = booking.studentName;
+  const subjectSpan = document.createElement("span");
+  subjectSpan.className = "booking-subject";
+  subjectSpan.textContent = booking.subject;
+  div.appendChild(nameSpan);
+  div.appendChild(document.createElement("br"));
+  div.appendChild(subjectSpan);
+  return div;
 }
 
 function makeCell(text, cls) {
@@ -93,6 +109,7 @@ function openDetailModal(booking) {
     <div class="detail-row"><span>Day</span><span>${booking.day}</span></div>
     <div class="detail-row"><span>Time</span><span>${formatTime12(booking.startTime)}-${formatTime12(booking.endTime)}</span></div>
     <div class="detail-row"><span>Level</span><span>${booking.level}</span></div>
+    <div class="detail-row"><span>Subject</span><span>${escapeHtml(booking.subject)}</span></div>
     <div class="detail-row"><span>Student</span><span>${escapeHtml(booking.studentName)}</span></div>
     <div class="detail-row"><span>Parent</span><span>${escapeHtml(booking.parentName)}</span></div>
     <div class="detail-row"><span>Parent #</span><span>${escapeHtml(booking.parentNumber)}</span></div>

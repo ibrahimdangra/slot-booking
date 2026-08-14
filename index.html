@@ -13,6 +13,17 @@
 <section id="step-1" class="screen">
   <div class="screen-body">
     <h1>Start Here</h1>
+    <p class="start-notice">
+      Bookings are completed one at a time. 
+      <br /><br />
+      After confirming your slot, you can exit the app or press the "Book Another" button if you'd like to book multiple. Please check before confirming as you won't be able to edit after completion.
+      <br /><br />
+      GCSE slots are 1 hour each. A-Level slots are 1.5 hours each.
+      <br /><br />
+      Please ensure to keep note of the day and time chosen.
+      <br /><br />
+      Thank you!
+    </p>
     <button class="btn" id="btn-start">Book A Slot</button>
   </div>
 </section>
@@ -34,6 +45,7 @@
   <button class="btn-back" id="btn-back-3" aria-label="Back">&#8592;</button>
   <h1 class="grid-heading">Choose a day &amp; time</h1>
   <p id="grid-subtitle" class="grid-subtitle"></p>
+  <p id="grid-error" class="error-text hidden"></p>
   <div class="slot-grid-wrap">
     <p id="grid-loading" class="grid-loading hidden">Loading</p>
     <div id="slot-grid" class="slot-grid"></div>
@@ -47,6 +59,15 @@
     <h2 id="modal-title">Day Time</h2>
     <p class="modal-subtitle" id="modal-level">LEVEL</p>
     <form id="booking-form">
+      <div class="field">
+        <label for="subject">Subject</label>
+        <select id="subject" required>
+          <option value="" disabled selected>Select a subject</option>
+          <option value="Maths">Maths</option>
+          <option value="Chemistry">Chemistry</option>
+          <option value="Maths & Chemistry">Maths & Chemistry</option>
+        </select>
+      </div>
       <div class="field">
         <label for="studentName">Student full name</label>
         <input type="text" id="studentName" required />

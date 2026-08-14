@@ -74,18 +74,18 @@ function renderGrid() {
 
   document.getElementById("grid-subtitle").textContent =
     selectedLevel === "GCSE" ? "All GCSE slots are 1 hour" : "All A-Level slots are 1.5 hours";
+  hideGridError();
 
   // corner
   grid.appendChild(makeCell("", "day-header"));
   DAYS.forEach((d) => grid.appendChild(makeCell(d[0], "day-header")));
 
-  // Precompute bookable slots per day for the selected level
-  const bookableByDay = {};
-  const startsByDay = {};
+  // Precompute individually free (open & not booked) half-hour units per day.
+  // A cell is clickable whenever its own unit is free, even if the full
+  // level-length slot starting there wouldn't fit — that's validated on click.
+  const freeUnitsByDay = {};
   DAYS.forEach((day) => {
-    const slots = getBookableSlots(state.availability, state.bookings, day, selectedLevel);
-    bookableByDay[day] = slots;
-    startsByDay[day] = new Map(slots.map((s) => [s.startTime, s]));
+    freeUnitsByDay[day] = getFreeUnits(state.availability, state.bookings, day);
   });
 
   TIMES.forEach((time) => {
@@ -96,16 +96,39 @@ function renderGrid() {
 
     grid.appendChild(makeCell(formatTime12(time), `time-label ${lineCls}`));
     DAYS.forEach((day) => {
-      const slot = startsByDay[day].get(time);
-      if (slot) {
+      if (freeUnitsByDay[day].has(time)) {
         const cell = makeCell("", `bookable ${lineCls}`);
-        cell.addEventListener("click", () => openBookingModal(day, slot));
+        cell.addEventListener("click", () => attemptSelectSlot(day, time));
         grid.appendChild(cell);
       } else {
         grid.appendChild(makeCell("", `empty ${lineCls}`));
       }
     });
   });
+}
+
+function attemptSelectSlot(day, time) {
+  const { valid, endTime } = getLevelSlotAt(state.availability, state.bookings, day, selectedLevel, time);
+  if (!valid) {
+    showGridError(
+      selectedLevel === "GCSE"
+        ? "GCSE slots are 1 hour each. Please choose another time."
+        : "A-Level slots are 1.5 hours each. Please choose another time."
+    );
+    return;
+  }
+  hideGridError();
+  openBookingModal(day, { startTime: time, endTime });
+}
+
+function showGridError(message) {
+  const el = document.getElementById("grid-error");
+  el.textContent = message;
+  el.classList.remove("hidden");
+}
+
+function hideGridError() {
+  document.getElementById("grid-error").classList.add("hidden");
 }
 
 function makeCell(text, cls) {
@@ -151,12 +174,14 @@ form.addEventListener("submit", async (e) => {
   errorEl.classList.add("hidden");
   const submitBtn = form.querySelector("button[type=submit]");
   submitBtn.disabled = true;
+  submitBtn.textContent = "Please wait...";
 
   const payload = {
     day: selectedSlot.day,
     startTime: selectedSlot.startTime,
     endTime: selectedSlot.endTime,
     level: selectedLevel,
+    subject: document.getElementById("subject").value,
     studentName: document.getElementById("studentName").value.trim(),
     parentName: document.getElementById("parentName").value.trim(),
     parentNumber: document.getElementById("parentNumber").value.trim(),
@@ -182,6 +207,7 @@ form.addEventListener("submit", async (e) => {
     errorEl.classList.remove("hidden");
   } finally {
     submitBtn.disabled = false;
+    submitBtn.textContent = "Book";
   }
 });
 
