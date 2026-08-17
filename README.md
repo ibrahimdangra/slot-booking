@@ -13,7 +13,7 @@ Backend is a Google Sheet, written to via a Google Apps Script Web App.
 2. Create two tabs named exactly `Availability` and `Bookings`.
 3. In `Bookings`, add this header row:
    ```
-   BookingId | Day | StartTime | EndTime | Level | Subject | StudentName | ParentName | ParentNumber | Email | CreatedAt
+   BookingId | Day | StartTime | EndTime | Level | Subject | StartingDate | StudentName | ParentName | ParentNumber | Email | CreatedAt
    ```
 4. Leave `Availability` empty for now — you'll seed it via script in step 3 below.
 

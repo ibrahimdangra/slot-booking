@@ -110,6 +110,7 @@ function openDetailModal(booking) {
     <div class="detail-row"><span>Time</span><span>${formatTime12(booking.startTime)}-${formatTime12(booking.endTime)}</span></div>
     <div class="detail-row"><span>Level</span><span>${booking.level}</span></div>
     <div class="detail-row"><span>Subject</span><span>${escapeHtml(booking.subject)}</span></div>
+    <div class="detail-row"><span>Starting date</span><span>${escapeHtml(booking.startingDate)}</span></div>
     <div class="detail-row"><span>Student</span><span>${escapeHtml(booking.studentName)}</span></div>
     <div class="detail-row"><span>Parent</span><span>${escapeHtml(booking.parentName)}</span></div>
     <div class="detail-row"><span>Parent #</span><span>${escapeHtml(booking.parentNumber)}</span></div>

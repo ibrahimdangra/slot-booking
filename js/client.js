@@ -182,6 +182,7 @@ form.addEventListener("submit", async (e) => {
     endTime: selectedSlot.endTime,
     level: selectedLevel,
     subject: document.getElementById("subject").value,
+    startingDate: document.getElementById("startingDate").value,
     studentName: document.getElementById("studentName").value.trim(),
     parentName: document.getElementById("parentName").value.trim(),
     parentNumber: document.getElementById("parentNumber").value.trim(),
