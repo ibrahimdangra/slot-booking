@@ -189,8 +189,27 @@
 }
 
 .slot-grid .cell.empty {
-  background: var(--grey-light);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--grey-light),
+    var(--grey-light) 6px,
+    var(--grey-mid) 6px,
+    var(--grey-mid) 7px
+  );
   cursor: default;
+}
+
+.logo {
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 128px;
+  width: 100%;
+  height: auto;
+  animation: fade-rise 0.45s ease both;
 }
 
 .booking-summary {
