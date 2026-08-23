@@ -12,7 +12,6 @@
 <!-- Step 1: Landing -->
 <section id="step-1" class="screen">
   <div class="screen-body">
-    <img src="img/logo.png" alt="ID Tutoring logo" class="logo" />
     <h1>Start Here</h1>
     <p class="start-notice">
       Bookings are completed one at a time. 
@@ -23,7 +22,7 @@
       <br /><br />
       Please ensure to keep note of the day and time chosen.
       <br /><br />
-      If you have any queries please reach out to me via Whatsapp. 
+      If there is a particular time and day you'd like but don't see the option available, please reach out to me via Whatsapp. 
       <br /><br />
       Thank you!
     </p>
@@ -46,12 +45,18 @@
 <!-- Step 3: Day & time grid -->
 <section id="step-3" class="screen hidden">
   <button class="btn-back" id="btn-back-3" aria-label="Back">&#8592;</button>
-  <h1 class="grid-heading">Choose a day &amp; time</h1>
+  <div class="list-header">
+    <div class="day-title">
+      <button class="day-nav" id="day-prev" aria-label="Previous day">&#8249;</button>
+      <span id="day-title-text">Day</span>
+      <button class="day-nav" id="day-next" aria-label="Next day">&#8250;</button>
+    </div>
+  </div>
   <p id="grid-subtitle" class="grid-subtitle"></p>
   <p id="grid-error" class="error-text hidden"></p>
-  <div class="slot-grid-wrap">
+  <div class="slot-list-wrap">
     <p id="grid-loading" class="grid-loading hidden">Loading</p>
-    <div id="slot-grid" class="slot-grid"></div>
+    <div id="slot-list" class="slot-list"></div>
   </div>
 </section>
 
@@ -104,7 +109,6 @@
 <!-- Step 5: Confirmation -->
 <section id="step-5" class="screen hidden">
   <div class="screen-body">
-    <img src="img/logo.png" alt="ID Tutoring logo" class="logo" />
     <h1>Thanks for booking!</h1>
     <button class="btn" id="btn-book-another">Book another</button>
   </div>

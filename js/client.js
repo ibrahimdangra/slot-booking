@@ -10,6 +10,7 @@ const DAY_FULL = {
 let state = null; // { availability, bookings }
 let selectedLevel = null;
 let selectedSlot = null; // { day, startTime, endTime }
+let selectedDayIndex = 0;
 
 const steps = ["step-1", "step-2", "step-3", "step-5"];
 
@@ -42,17 +43,28 @@ document.getElementById("btn-start").addEventListener("click", () => {
 document.querySelectorAll("[data-level]").forEach((btn) => {
   btn.addEventListener("click", async () => {
     selectedLevel = btn.dataset.level;
+    selectedDayIndex = 0;
     showStep("step-3");
-    await loadAndRenderGrid();
+    await loadAndRenderList();
   });
 });
 
-async function loadAndRenderGrid() {
-  const grid = document.getElementById("slot-grid");
+document.getElementById("day-prev").addEventListener("click", () => {
+  selectedDayIndex = (selectedDayIndex - 1 + DAYS.length) % DAYS.length;
+  renderList();
+});
+
+document.getElementById("day-next").addEventListener("click", () => {
+  selectedDayIndex = (selectedDayIndex + 1) % DAYS.length;
+  renderList();
+});
+
+async function loadAndRenderList() {
+  const list = document.getElementById("slot-list");
   const loading = document.getElementById("grid-loading");
-  grid.innerHTML = "";
-  grid.style.display = "none";
-  grid.classList.remove("fade-in");
+  list.innerHTML = "";
+  list.style.display = "none";
+  list.classList.remove("fade-in");
   loading.classList.remove("hidden");
 
   try {
@@ -63,62 +75,43 @@ async function loadAndRenderGrid() {
   }
   loading.classList.add("hidden");
   loading.textContent = "Loading";
-  renderGrid();
+  renderList();
 }
 
-function renderGrid() {
-  const grid = document.getElementById("slot-grid");
-  grid.innerHTML = "";
-  grid.style.display = "grid";
-  grid.classList.add("fade-in");
+function renderList() {
+  const list = document.getElementById("slot-list");
+  list.innerHTML = "";
+  list.style.display = "flex";
+  list.classList.add("fade-in");
 
+  const day = DAYS[selectedDayIndex];
+  document.getElementById("day-title-text").textContent = DAY_FULL[day];
   document.getElementById("grid-subtitle").textContent =
     selectedLevel === "GCSE" ? "All GCSE slots are 1 hour" : "All A-Level slots are 1.5 hours";
   hideGridError();
 
-  // corner
-  grid.appendChild(makeCell("", "day-header"));
-  DAYS.forEach((d) => grid.appendChild(makeCell(d[0], "day-header")));
+  // Only full-length, non-overlapping slots for this level are listed here,
+  // so picking one slot automatically removes any other start time that
+  // would double-book the same half-hour units (e.g. 6-7pm being taken
+  // removes 5:30pm too).
+  const slots = getBookableSlots(state.availability, state.bookings, day, selectedLevel);
 
-  // Precompute individually free (open & not booked) half-hour units per day.
-  // A cell is clickable whenever its own unit is free, even if the full
-  // level-length slot starting there wouldn't fit — that's validated on click.
-  const freeUnitsByDay = {};
-  DAYS.forEach((day) => {
-    freeUnitsByDay[day] = getFreeUnits(state.availability, state.bookings, day);
-  });
-
-  TIMES.forEach((time) => {
-    // The border below this row marks the boundary to the next row: a solid
-    // hour line if this row is the :30 before the next hour, otherwise a
-    // dotted half-hour line.
-    const lineCls = time.endsWith(":30") ? "row-hour-line" : "row-half-line";
-
-    grid.appendChild(makeCell(formatTime12(time), `time-label ${lineCls}`));
-    DAYS.forEach((day) => {
-      if (freeUnitsByDay[day].has(time)) {
-        const cell = makeCell("", `bookable ${lineCls}`);
-        cell.addEventListener("click", () => attemptSelectSlot(day, time));
-        grid.appendChild(cell);
-      } else {
-        grid.appendChild(makeCell("", `empty ${lineCls}`));
-      }
-    });
-  });
-}
-
-function attemptSelectSlot(day, time) {
-  const { valid, endTime } = getLevelSlotAt(state.availability, state.bookings, day, selectedLevel, time);
-  if (!valid) {
-    showGridError(
-      selectedLevel === "GCSE"
-        ? "GCSE slots are 1 hour each. Please choose another time."
-        : "A-Level slots are 1.5 hours each. Please choose another time."
-    );
+  if (slots.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "list-empty";
+    empty.textContent = "No available slots on this day.";
+    list.appendChild(empty);
     return;
   }
-  hideGridError();
-  openBookingModal(day, { startTime: time, endTime });
+
+  slots.forEach((slot) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "slot-btn";
+    btn.textContent = formatTime12(slot.startTime);
+    btn.addEventListener("click", () => openBookingModal(day, slot));
+    list.appendChild(btn);
+  });
 }
 
 function showGridError(message) {
@@ -129,19 +122,6 @@ function showGridError(message) {
 
 function hideGridError() {
   document.getElementById("grid-error").classList.add("hidden");
-}
-
-function makeCell(text, cls) {
-  const div = document.createElement("div");
-  div.className = `cell ${cls}`;
-  if (cls.includes("time-label")) {
-    const span = document.createElement("span");
-    span.textContent = text;
-    div.appendChild(span);
-  } else {
-    div.textContent = text;
-  }
-  return div;
 }
 
 // ---- Booking modal ----
@@ -198,7 +178,7 @@ form.addEventListener("submit", async (e) => {
       errorEl.textContent = "Sorry, that slot was just booked. Please pick another.";
       errorEl.classList.remove("hidden");
       closeBookingModal();
-      await loadAndRenderGrid();
+      await loadAndRenderList();
     } else {
       errorEl.textContent = "Something went wrong. Please try again.";
       errorEl.classList.remove("hidden");

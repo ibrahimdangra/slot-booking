@@ -73,11 +73,41 @@
   font-size: 1.2rem;
 }
 
-/* Step 3: day/time grid */
-.grid-heading {
-  align-self: flex-start;
-  font-size: 1.5rem;
+/* Step 3: day/time list */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   margin: 1rem 0 0.25rem;
+}
+
+.day-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+}
+
+.day-nav {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--black);
+  background: var(--black);
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.day-nav:active {
+  opacity: 0.75;
 }
 
 .grid-subtitle {
@@ -88,7 +118,7 @@
   margin-bottom: 1.25rem;
 }
 
-.slot-grid-wrap {
+.slot-list-wrap {
   position: relative;
   width: 100%;
   flex: 1;
@@ -120,96 +150,39 @@
   }
 }
 
-.slot-grid {
-  display: grid;
-  grid-template-columns: 56px repeat(6, minmax(48px, 1fr));
-  border-top: 1px solid var(--grey-light);
-  border-left: 1px solid var(--grey-light);
-  min-width: 480px;
+.slot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.035rem;
+  padding-bottom: 1rem;
 }
 
-.slot-grid.fade-in {
+.slot-list.fade-in {
   animation: fade-in 0.4s ease both;
 }
 
-.slot-grid .cell {
-  border-right: 1px solid var(--grey-light);
-  border-bottom: 1px solid var(--grey-light);
-  min-height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-}
-
-.slot-grid .cell.row-hour-line {
-  border-bottom: 1px solid var(--grey-mid);
-}
-
-.slot-grid .cell.row-half-line {
-  border-bottom: 1px dotted var(--grey-mid);
-}
-
-.slot-grid .cell.day-header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
+.slot-btn {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid var(--black);
+  border-radius: 16px;
   background: #fff;
-}
-
-.slot-grid .cell.day-header,
-.slot-grid .cell.time-label {
-  font-weight: 800;
-}
-
-.slot-grid .cell.time-label {
-  position: relative;
-  border-bottom: none;
-  font-size: 0.7rem;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding-right: 6px;
+  font-size: 1.1rem;
   font-weight: 700;
-}
-
-.slot-grid .cell.time-label span {
-  position: relative;
-  top: -0.6em;
-  background: #fff;
-}
-
-.slot-grid .cell.bookable {
-  background: #fff;
+  color: var(--black);
   cursor: pointer;
-  font-weight: 700;
+  font-family: inherit;
 }
 
-.slot-grid .cell.bookable:active {
+.slot-btn:active {
   background: var(--grey-light);
 }
 
-.slot-grid .cell.empty {
-  background: repeating-linear-gradient(
-    45deg,
-    var(--grey-light),
-    var(--grey-light) 6px,
-    var(--grey-mid) 6px,
-    var(--grey-mid) 7px
-  );
-  cursor: default;
-}
-
-.logo {
-  display: block;
-  position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  max-width: 128px;
-  width: 100%;
-  height: auto;
-  animation: fade-rise 0.45s ease both;
+.list-empty {
+  color: var(--grey-dark);
+  font-weight: 600;
+  padding: 2rem 0;
+  text-align: center;
 }
 
 .booking-summary {
