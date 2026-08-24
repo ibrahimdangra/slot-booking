@@ -12,6 +12,13 @@ let selectedLevel = null;
 let selectedSlot = null; // { day, startTime, endTime }
 let selectedDayIndex = 0;
 
+// Kick off the availability fetch immediately on page load, rather than
+// waiting until the user reaches the slot picker (step 3). Apps Script cold
+// starts can take a couple of seconds, so by the time someone has tapped
+// through "Book a slot" -> a level, this has often already resolved.
+let statePromise = fetchState();
+statePromise.catch(() => {}); // avoid an unhandled-rejection warning; the real error is handled where it's awaited
+
 const steps = ["step-1", "step-2", "step-3", "step-5"];
 
 function showStep(id) {
@@ -68,11 +75,16 @@ async function loadAndRenderList() {
   loading.classList.remove("hidden");
 
   try {
-    state = await fetchState();
+    state = await (statePromise || fetchState());
   } catch (err) {
+    statePromise = null;
     loading.textContent = "Sorry, couldn't load availability. Please try again later.";
     return;
   }
+  // Once consumed, the next visit to the slot picker (new level, or a
+  // retry after a slot got taken) should fetch fresh data rather than
+  // reusing this snapshot.
+  statePromise = null;
   loading.classList.add("hidden");
   loading.textContent = "Loading";
   renderList();
