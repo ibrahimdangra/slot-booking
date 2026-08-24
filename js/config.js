@@ -3,10 +3,10 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNiAASkLyxn2hg
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-// Half-hour unit starts from 10:00 to 21:00 inclusive (last unit is 21:00-21:30)
+// Half-hour unit starts from 09:00 to 21:00 inclusive (last unit is 21:00-21:30)
 const TIMES = (() => {
   const times = [];
-  for (let h = 10; h <= 21; h++) {
+  for (let h = 9; h <= 21; h++) {
     times.push(`${String(h).padStart(2, "0")}:00`);
     times.push(`${String(h).padStart(2, "0")}:30`);
   }
