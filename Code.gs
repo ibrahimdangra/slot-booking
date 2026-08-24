@@ -9,11 +9,18 @@ const UNIT_MINUTES = 30;
 const LEVEL_UNITS = { "GCSE": 2, "A-Level": 3 };
 
 function doGet(e) {
-  const action = e.parameter.action;
-  if (action === "getState") {
-    return jsonResponse(getState());
+  try {
+    const action = e.parameter.action;
+    if (action === "getState") {
+      return jsonResponse(getState());
+    }
+    return jsonResponse({ ok: false, error: "unknown_action" });
+  } catch (err) {
+    // Without this, an unexpected error (renamed sheet tab, quota hiccup,
+    // etc) would return Apps Script's own HTML error page instead of JSON,
+    // breaking the client's res.json() parsing.
+    return jsonResponse({ ok: false, error: "server_error", message: String(err) });
   }
-  return jsonResponse({ ok: false, error: "unknown_action" });
 }
 
 function doPost(e) {
@@ -44,6 +51,10 @@ function doPost(e) {
       default:
         return jsonResponse({ ok: false, error: "unknown_action" });
     }
+  } catch (err) {
+    // Same reasoning as doGet: guarantee JSON even on an unexpected error,
+    // so the client's retry/error handling always has something to parse.
+    return jsonResponse({ ok: false, error: "server_error", message: String(err) });
   } finally {
     // Any write may have changed availability/bookings — bump the version so
     // in-flight and future reads stop trusting the pre-write cache entry.
