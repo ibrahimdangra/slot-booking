@@ -24,8 +24,11 @@ function doPost(e) {
     return jsonResponse({ ok: false, error: "invalid_body" });
   }
 
+  // Waits up to 20s for the lock so a burst of simultaneous bookers queue up
+  // and get processed one at a time (each write only takes a fraction of a
+  // second), instead of most of them getting rejected outright.
   const lock = LockService.getScriptLock();
-  const gotLock = lock.tryLock(10000);
+  const gotLock = lock.tryLock(20000);
   if (!gotLock) {
     return jsonResponse({ ok: false, error: "busy", message: "Please try again in a moment." });
   }
