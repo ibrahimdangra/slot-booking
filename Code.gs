@@ -45,9 +45,9 @@ function doPost(e) {
         return jsonResponse({ ok: false, error: "unknown_action" });
     }
   } finally {
-    // Any write may have changed availability/bookings — drop the cached
-    // getState() result so the next read reflects it immediately.
-    invalidateStateCache();
+    // Any write may have changed availability/bookings — bump the version so
+    // in-flight and future reads stop trusting the pre-write cache entry.
+    bumpStateVersion();
     lock.releaseLock();
   }
 }
@@ -56,25 +56,43 @@ function doPost(e) {
 
 const STATE_CACHE_KEY = "state_v1";
 const STATE_CACHE_SECONDS = 20;
+const STATE_VERSION_KEY = "state_version";
+const STATE_VERSION_TTL_SECONDS = 21600; // 6h, comfortably longer than any single cache entry's life
 
 // Reading both sheets fresh (400+ rows) on every single request is the main
-// source of slow loads. Cache the computed result for a short window so
-// most requests return near-instantly; writes below explicitly invalidate
-// this cache so nobody sees stale availability after a booking.
+// source of slow loads, so the computed result is cached for a short window.
+// A plain "cache.remove() on write" would leave a race: a read that started
+// before a write can finish computing *after* the write's invalidation and
+// re-populate the cache with stale (pre-write) data, hiding a just-made
+// booking from everyone else for up to STATE_CACHE_SECONDS. Tagging the
+// cache entry with a version number closes that: a read only stores its
+// result if the version is still what it was when the read started, so a
+// write that lands mid-read can never be clobbered by that read's stale
+// snapshot — it just serves its own request once and nothing gets cached.
 function getState() {
   const cache = CacheService.getScriptCache();
-  const cached = cache.get(STATE_CACHE_KEY);
+  const version = getStateVersion();
+  const key = STATE_CACHE_KEY + "_" + version;
+  const cached = cache.get(key);
   if (cached) return JSON.parse(cached);
 
   const availability = readAvailability();
   const bookings = readBookings();
   const result = { ok: true, availability, bookings };
-  cache.put(STATE_CACHE_KEY, JSON.stringify(result), STATE_CACHE_SECONDS);
+  if (getStateVersion() === version) {
+    cache.put(key, JSON.stringify(result), STATE_CACHE_SECONDS);
+  }
   return result;
 }
 
-function invalidateStateCache() {
-  CacheService.getScriptCache().remove(STATE_CACHE_KEY);
+function getStateVersion() {
+  const v = CacheService.getScriptCache().get(STATE_VERSION_KEY);
+  return v ? Number(v) : 0;
+}
+
+function bumpStateVersion() {
+  const cache = CacheService.getScriptCache();
+  cache.put(STATE_VERSION_KEY, String(getStateVersion() + 1), STATE_VERSION_TTL_SECONDS);
 }
 
 function readAvailability() {
