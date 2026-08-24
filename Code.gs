@@ -45,16 +45,36 @@ function doPost(e) {
         return jsonResponse({ ok: false, error: "unknown_action" });
     }
   } finally {
+    // Any write may have changed availability/bookings — drop the cached
+    // getState() result so the next read reflects it immediately.
+    invalidateStateCache();
     lock.releaseLock();
   }
 }
 
 // ---- Read helpers ----
 
+const STATE_CACHE_KEY = "state_v1";
+const STATE_CACHE_SECONDS = 20;
+
+// Reading both sheets fresh (400+ rows) on every single request is the main
+// source of slow loads. Cache the computed result for a short window so
+// most requests return near-instantly; writes below explicitly invalidate
+// this cache so nobody sees stale availability after a booking.
 function getState() {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get(STATE_CACHE_KEY);
+  if (cached) return JSON.parse(cached);
+
   const availability = readAvailability();
   const bookings = readBookings();
-  return { ok: true, availability, bookings };
+  const result = { ok: true, availability, bookings };
+  cache.put(STATE_CACHE_KEY, JSON.stringify(result), STATE_CACHE_SECONDS);
+  return result;
+}
+
+function invalidateStateCache() {
+  CacheService.getScriptCache().remove(STATE_CACHE_KEY);
 }
 
 function readAvailability() {
